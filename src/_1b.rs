@@ -20,7 +20,13 @@ where
         // parse the digit, or None if can't yet
         let res = ch.to_digit(10).or_else(|| {
             // if not a digit...
-            mem.push_front(ch);
+            let vec_operation = if forward {
+                VecDeque::push_front
+            } else {
+                VecDeque::push_back
+            };
+
+            vec_operation(&mut mem, ch);
 
             mem.make_contiguous();
             mem_is_number(mem.as_slices().0)
