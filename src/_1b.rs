@@ -1,4 +1,4 @@
-use std::collections::VecDeque;
+use std::{collections::VecDeque, process::exit};
 
 type NumberKVPair = (&'static str, u32);
 const NUMBERS: [NumberKVPair; 10] = [
@@ -19,13 +19,19 @@ pub fn run(input: &str) {
     println!("{}", sum);
 }
 
-fn mem_is_number(slice: &[char]) -> Option<u32> {
-    let word = slice.iter().collect::<String>();
+fn mem_is_number<'a, T>(it: T) -> Option<u32>
+where
+    T: Iterator<Item = &'a char>,
+{
+    let word = it.collect::<String>();
     for (k, v) in NUMBERS {
         if word.starts_with(k) {
+            println!("Found: {}", word);
             return Some(v);
         }
     }
+
+    println!("{} is not a number", word);
 
     None
 }
@@ -41,6 +47,7 @@ where
         // parse the digit, or None if can't yet
         let res = ch.to_digit(10).or_else(|| {
             // if not a digit...
+            println!("Pushing: {}", ch);
             let vec_operation = if forward {
                 VecDeque::push_front
             } else {
@@ -50,19 +57,27 @@ where
             vec_operation(&mut mem, ch);
 
             mem.make_contiguous();
-            mem_is_number(mem.as_slices().0)
+            let it = mem.iter();
+            mem_is_number(it)
         });
 
         if let Some(n) = res {
+            println!("Clearing!");
             mem.clear();
             return res;
         }
     }
 
+    mem.clear();
     None
 }
 
 fn parse_line(line: &str) -> u32 {
+    // for testing, quit at ---
+    if line == "---" {
+        exit(0)
+    }
+
     let mut chars = line.chars();
 
     let n_first = consume_num(true, &mut chars).unwrap();
