@@ -24,7 +24,7 @@ pub fn run(input: &str) {
 }
 
 fn preprocess_replace(line: &str) -> String {
-    let mut res = line.to_owned();
+    let mut res = "".to_owned();
     let chars = line.chars().collect::<Vec<_>>();
 
     for i in 0..chars.len() {
@@ -41,10 +41,6 @@ fn preprocess_replace(line: &str) -> String {
 
             res.push(char::from_digit(digit, 10).unwrap());
         }
-    }
-
-    for (k, v) in NUMBERS {
-        res = res.replace(k, &v.to_string())
     }
 
     res
