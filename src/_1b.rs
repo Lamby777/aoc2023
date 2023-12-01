@@ -1,17 +1,35 @@
+use std::collections::VecDeque;
+
 pub fn run(input: &str) {
-    let values = input.lines().map(line_to_calibration);
-    let sum = values.sum::<u32>();
+    let sum = input.lines().map(parse_line).sum::<u32>();
     println!("{}", sum);
 }
 
-pub fn line_to_calibration(line: &str) -> u32 {
-    let mut chars = line.chars().filter(|v| v.is_digit(10));
+fn mem_is_number(deque: &[char]) -> bool {
+    true
+}
 
-    fn char_to_digit(c: char) -> u32 {
-        c.to_digit(10).unwrap()
-    }
+fn parse_line(line: &str) -> u32 {
+    let mut chars = line.chars();
 
-    let n_first = chars.next().map(char_to_digit).unwrap();
+    let mem = VecDeque::new();
+    let n_first = chars.take_while(|ch| {
+        if let Some(n) = ch.to_digit(10) {
+            mem.clear();
+            return false;
+        } else {
+            mem.push_front(*ch);
+
+            mem.make_contiguous();
+            if mem_is_number(mem.as_slices().0) {
+                mem.clear();
+                return false;
+            }
+        }
+
+        true
+    });
+
     let n_last = chars.next_back().map(char_to_digit);
     let n_last = n_last.unwrap_or(n_first);
 
