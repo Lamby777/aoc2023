@@ -9,15 +9,18 @@ fn mem_is_number(deque: &[char]) -> Option<u32> {
     None
 }
 
-fn parse_line(line: &str) -> u32 {
-    let mut chars = line.chars();
-
+/// consume iterator items until a number is found
+fn consume_num<T>(forward: bool, chars: &mut T) -> Option<u32>
+where
+    T: Iterator<Item = char>,
+{
     let mut mem = VecDeque::new();
-    let n_first = chars.take_while(|ch| {
+
+    while let Some(ch) = chars.next() {
         // parse the digit, or None if can't yet
         let res = ch.to_digit(10).or_else(|| {
             // if not a digit...
-            mem.push_front(*ch);
+            mem.push_front(ch);
 
             mem.make_contiguous();
             mem_is_number(mem.as_slices().0)
@@ -25,14 +28,18 @@ fn parse_line(line: &str) -> u32 {
 
         if let Some(n) = res {
             mem.clear();
-            true
-        } else {
-            false
+            return res;
         }
-    });
+    }
 
-    let n_last = chars.next_back().map(char_to_digit);
-    let n_last = n_last.unwrap_or(n_first);
+    None
+}
+
+fn parse_line(line: &str) -> u32 {
+    let mut chars = line.chars();
+
+    let n_first = consume_num(true, &mut chars).unwrap();
+    let n_last = consume_num(false, &mut chars).unwrap_or(n_first);
 
     (n_first * 10) + n_last
 }
