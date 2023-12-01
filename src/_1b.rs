@@ -45,7 +45,7 @@ fn parse_line(line: &str) -> u32 {
     let mut chars = line.chars();
 
     let n_first = consume_num(true, &mut chars).unwrap();
-    let n_last = consume_num(false, &mut chars).unwrap_or(n_first);
+    let n_last = consume_num(false, &mut chars.rev()).unwrap_or(n_first);
 
     (n_first * 10) + n_last
 }
