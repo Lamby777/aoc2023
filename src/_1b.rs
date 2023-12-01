@@ -27,21 +27,26 @@ fn preprocess_replace(line: &str) -> String {
     let mut res = line.to_owned();
     let chars = line.chars().collect::<Vec<_>>();
 
-    // last "word" number was this many letters ago
-    let mut debounce = 0usize;
+    let mut skips_left = 0;
 
     for i in 0..chars.len() {
         for (k, v) in NUMBERS {
             let k_chars = k.chars().collect::<Vec<_>>();
 
-            let digit = if debounce == 0 && chars[i..].starts_with(&k_chars) {
-                debounce = k.len();
+            // if not reading a new word, continue til we are
+            if skips_left > 0 {
+                println!("skipping: {}", skips_left);
+                skips_left -= 1;
+                continue;
+            }
+
+            let digit = if chars[i..].starts_with(&k_chars) {
+                skips_left = k.len() - 1;
+                dbg!(k_chars, skips_left);
                 v
             } else if let Some(n) = chars[i].to_digit(10) {
-                debounce = debounce.saturating_sub(1);
                 n
             } else {
-                debounce = debounce.saturating_sub(1);
                 continue;
             };
 
