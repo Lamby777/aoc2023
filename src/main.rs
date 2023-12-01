@@ -9,5 +9,5 @@ mod _1a;
 mod _1b;
 
 fn main() {
-    _1b::run(include_str!("inputs/1a.txt"));
+    _1b::run(include_str!("inputs/1b.txt"));
 }
