@@ -14,20 +14,21 @@ fn parse_line(line: &str) -> u32 {
 
     let mem = VecDeque::new();
     let n_first = chars.take_while(|ch| {
-        if let Some(n) = ch.to_digit(10) {
-            mem.clear();
-            return false;
+        let res = if let Some(n) = ch.to_digit(10) {
+            n
         } else {
             mem.push_front(*ch);
 
             mem.make_contiguous();
             if mem_is_number(mem.as_slices().0) {
-                mem.clear();
-                return false;
+                //
+            } else {
+                return true;
             }
-        }
+        };
 
-        true
+        mem.clear();
+        false;
     });
 
     let n_last = chars.next_back().map(char_to_digit);
