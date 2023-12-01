@@ -47,22 +47,14 @@ where
         // parse the digit, or None if can't yet
         let res = ch.to_digit(10).or_else(|| {
             // if not a digit...
-            println!("Pushing: {}", ch);
-            let vec_operation = if forward {
-                VecDeque::push_front
-            } else {
-                VecDeque::push_back
-            };
-
-            vec_operation(&mut mem, ch);
+            mem.push_front(ch);
 
             mem.make_contiguous();
-            let it = mem.iter();
-            mem_is_number(it)
+            mem_is_number(mem.iter())
         });
 
         if let Some(n) = res {
-            println!("Clearing!");
+            println!("Clearing with: {}!", n);
             mem.clear();
             return res;
         }
@@ -81,7 +73,7 @@ fn parse_line(line: &str) -> u32 {
     let mut chars = line.chars();
 
     let n_first = consume_num(true, &mut chars).unwrap();
-    let n_last = consume_num(false, &mut chars.rev()).unwrap_or(n_first);
+    let n_last = consume_num(false, &mut chars).unwrap_or(n_first);
 
     (n_first * 10) + n_last
 }
