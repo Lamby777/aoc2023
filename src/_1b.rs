@@ -26,6 +26,23 @@ pub fn run(input: &str) {
 
 fn preprocess_replace(line: &str) -> String {
     let mut res = line.to_owned();
+    let chars = line.chars().collect::<Vec<_>>();
+
+    for i in 0..chars.len() {
+        for (k, v) in NUMBERS {
+            let k_chars = k.chars().collect::<Vec<_>>();
+
+            let digit = if chars[i..].starts_with(&k_chars) {
+                v
+            } else if let Some(n) = chars[i].to_digit(10) {
+                n
+            } else {
+                continue;
+            };
+
+            res.push(char::from_digit(digit, 10).unwrap());
+        }
+    }
 
     for (k, v) in NUMBERS {
         res = res.replace(k, &v.to_string())
