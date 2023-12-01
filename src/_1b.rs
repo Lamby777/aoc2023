@@ -5,30 +5,30 @@ pub fn run(input: &str) {
     println!("{}", sum);
 }
 
-fn mem_is_number(deque: &[char]) -> bool {
-    true
+fn mem_is_number(deque: &[char]) -> Option<u32> {
+    None
 }
 
 fn parse_line(line: &str) -> u32 {
     let mut chars = line.chars();
 
-    let mem = VecDeque::new();
+    let mut mem = VecDeque::new();
     let n_first = chars.take_while(|ch| {
-        let res = if let Some(n) = ch.to_digit(10) {
-            n
-        } else {
+        // parse the digit, or None if can't yet
+        let res = ch.to_digit(10).or_else(|| {
+            // if not a digit...
             mem.push_front(*ch);
 
             mem.make_contiguous();
-            if mem_is_number(mem.as_slices().0) {
-                //
-            } else {
-                return true;
-            }
-        };
+            mem_is_number(mem.as_slices().0)
+        });
 
-        mem.clear();
-        false;
+        if let Some(n) = res {
+            mem.clear();
+            true
+        } else {
+            false
+        }
     });
 
     let n_last = chars.next_back().map(char_to_digit);
