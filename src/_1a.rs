@@ -1,10 +1,10 @@
 pub fn run(input: &str) {
-    let values = input.lines().map(line_to_calibration);
+    let values = input.lines().map(parse_line);
     let sum = values.sum::<u32>();
     println!("{}", sum);
 }
 
-pub fn line_to_calibration(line: &str) -> u32 {
+pub fn parse_line(line: &str) -> u32 {
     let mut chars = line.chars().filter(|v| v.is_digit(10));
 
     fn char_to_digit(c: char) -> u32 {
