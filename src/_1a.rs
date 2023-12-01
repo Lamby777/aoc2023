@@ -1,3 +1,4 @@
+#[allow(dead_code)]
 pub fn run(input: &str) {
     let values = input.lines().map(parse_line);
     let sum = values.sum::<u32>();
