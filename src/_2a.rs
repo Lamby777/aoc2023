@@ -1,6 +1,6 @@
 //!
 //! Day 2
-//! Part 2
+//! Part 1
 //!
 //!  - &Cherry, 12/1/2023
 //!
@@ -42,29 +42,12 @@ impl Game {
         Self { id, picks }
     }
 
-    pub fn required_counts(&self) -> RGB {
-        let mut iter = self.picks.iter();
-
-        let mut max = iter.next().unwrap().clone();
-        for RGB(r, g, b) in iter {
-            if *r > max.0 {
-                max.0 = *r;
-            }
-
-            if *g > max.1 {
-                max.1 = *g
-            }
-
-            if *b > max.2 {
-                max.2 = *b
-            }
-        }
-
-        max
+    pub fn is_possible(&self, limit: &RGB) -> bool {
+        self.picks.iter().all(|v| v.is_possible(limit))
     }
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Debug, PartialEq)]
 struct RGB(u32, u32, u32);
 
 impl RGB {
@@ -96,17 +79,20 @@ impl RGB {
         res
     }
 
-    pub fn power(&self) -> u32 {
-        self.0 * self.1 * self.2
+    pub fn is_possible(&self, limit: &Self) -> bool {
+        self.0 <= limit.0 && self.1 <= limit.1 && self.2 <= limit.2
     }
 }
 
 fn main() {
     let input = inputfile!("2.txt");
+    let limits = RGB(12, 13, 14);
 
     let sum = input
         .lines()
-        .map(|line| Game::from_line(line).required_counts().power())
+        .map(Game::from_line)
+        .filter(|v| v.is_possible(&limits))
+        .map(|game| game.id)
         .sum::<u32>();
 
     println!("{}", sum);
