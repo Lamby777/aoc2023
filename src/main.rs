@@ -15,7 +15,7 @@ struct Game {
 }
 
 impl Game {
-    fn from_line(line: &str) -> Self {
+    pub fn from_line(line: &str) -> Self {
         let mut words = line.split_whitespace();
 
         // skip "Game"
@@ -41,13 +41,17 @@ impl Game {
 
         Self { id, picks }
     }
+
+    pub fn is_possible(&self, limit: &RGB) -> bool {
+        self.picks.iter().all(|v| v.is_possible(limit))
+    }
 }
 
 #[derive(Debug, PartialEq)]
 struct RGB(u32, u32, u32);
 
 impl RGB {
-    fn from_count(count: &str) -> Self {
+    pub fn from_count(count: &str) -> Self {
         let mut iter = count.split(',');
         let mut res = Self(0, 0, 0);
 
@@ -74,12 +78,24 @@ impl RGB {
 
         res
     }
+
+    pub fn is_possible(&self, limit: &Self) -> bool {
+        self.0 <= limit.0 && self.1 <= limit.1 && self.2 <= limit.2
+    }
 }
 
 fn main() {
     let input = inputfile!("2.txt");
+    let limits = RGB(12, 13, 14);
 
-    let _lines = input.lines().map(Game::from_line);
+    let sum = input
+        .lines()
+        .map(Game::from_line)
+        .filter(|v| v.is_possible(&limits))
+        .map(|game| game.id)
+        .sum::<u32>();
+
+    println!("{}", sum);
 }
 
 #[cfg(test)]
