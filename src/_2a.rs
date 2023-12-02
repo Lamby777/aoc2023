@@ -2,7 +2,7 @@
 //! Day 2
 //! Part 1
 //!
-//!  - &Cherry, 12/1/2023
+//!  - &Cherry
 //!
 
 mod macros;
