@@ -16,10 +16,22 @@ struct Game {
 
 impl Game {
     fn from_line(line: &str) -> Self {
-        Self {
-            id: todo!(),
-            picks: todo!(),
-        }
+        let mut words = line.split_whitespace();
+
+        // skip "Game"
+        words.next();
+
+        let id = {
+            // skip the colon
+            let mut it = words.next().unwrap().chars();
+            it.next_back();
+
+            it.as_str().parse::<u32>().unwrap()
+        };
+
+        let picks = vec![];
+
+        Self { id, picks }
     }
 }
 
@@ -32,6 +44,7 @@ fn main() {
     let lines = input.lines();
 }
 
+#[cfg(test)]
 mod tests {
     use super::*;
 
