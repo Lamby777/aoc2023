@@ -29,7 +29,15 @@ impl Game {
             it.as_str().parse::<u32>().unwrap()
         };
 
-        let picks = vec![];
+        // this has the side effect of removing all
+        // the whitespace, which is good for us here.
+        let counts = words.collect::<String>();
+        let counts = counts.split(';');
+
+        let picks = counts.fold(vec![], |mut res, count| {
+            res.push(RGB::from_count(count));
+            res
+        });
 
         Self { id, picks }
     }
@@ -37,11 +45,16 @@ impl Game {
 
 #[derive(Debug, PartialEq)]
 struct RGB(u32, u32, u32);
+impl RGB {
+    fn from_count(count: &str) -> RGB {
+        todo!()
+    }
+}
 
 fn main() {
     let input = inputfile!("2.txt");
 
-    let lines = input.lines();
+    let _lines = input.lines().map(Game::from_line);
 }
 
 #[cfg(test)]
