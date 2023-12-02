@@ -1,5 +1,6 @@
-#[allow(dead_code)]
-pub fn run(input: &str) {
+pub fn main() {
+    let input = include_str!("inputs/1.txt");
+
     let values = input.lines().map(parse_line);
     let sum = values.sum::<u32>();
     println!("{}", sum);
