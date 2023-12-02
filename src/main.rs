@@ -62,10 +62,11 @@ impl RGB {
 
             let color = chars.collect::<String>();
             let color_ref = match color.as_str() {
-                "red" => &mut res.0,
-                "green" => &mut res.1,
-                "blue" => &mut res.2,
-                _ => unreachable!(),
+                // think dumber, not harder :3
+                "ed" => &mut res.0,
+                "reen" => &mut res.1,
+                "lue" => &mut res.2,
+                x @ _ => panic!("wtf is a {}", x),
             };
 
             *color_ref = cube_count;
@@ -94,7 +95,7 @@ mod tests {
             game,
             Game {
                 id: 1,
-                picks: vec![RGB(2, 1, 4), RGB(6, 1, 4)],
+                picks: vec![RGB(0, 0, 4), RGB(2, 1, 0), RGB(6, 1, 4)],
             }
         )
     }
