@@ -45,9 +45,33 @@ impl Game {
 
 #[derive(Debug, PartialEq)]
 struct RGB(u32, u32, u32);
+
 impl RGB {
-    fn from_count(count: &str) -> RGB {
-        todo!()
+    fn from_count(count: &str) -> Self {
+        let mut iter = count.split(',');
+        let mut res = Self(0, 0, 0);
+
+        while let Some(count) = iter.next() {
+            let mut chars = count.chars();
+
+            let cube_count = chars
+                .by_ref()
+                .take_while(|v| v.to_digit(10).is_some())
+                .collect::<String>();
+            let cube_count = cube_count.parse::<u32>().unwrap();
+
+            let color = chars.collect::<String>();
+            let color_ref = match color.as_str() {
+                "red" => &mut res.0,
+                "green" => &mut res.1,
+                "blue" => &mut res.2,
+                _ => unreachable!(),
+            };
+
+            *color_ref = cube_count;
+        }
+
+        res
     }
 }
 
