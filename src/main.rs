@@ -12,10 +12,21 @@ const WIDTH: usize = 140;
 // as it turns out, using a Vec<Vec<char>> is actually
 // harder to work with than just Vec<char> in this case
 
+fn is_symbol(ch: char) -> bool {
+    ch.is_digit(10) && ch != '.'
+}
+
+fn symbol_indices(line: &[char]) -> Vec<usize> {
+    line.iter()
+        .enumerate()
+        .filter_map(|(i, &ch)| if is_symbol(ch) { Some(i) } else { None })
+        .collect()
+}
+
 fn find_part_numbers(input: Vec<char>) -> Vec<u32> {
     let res = vec![];
 
-    for (i, v) in input.iter().enumerate() {
+    for (i, &v) in input.iter().enumerate() {
         //
     }
 
