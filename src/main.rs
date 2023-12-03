@@ -14,6 +14,7 @@ fn is_symbol(ch: char) -> bool {
 }
 
 fn num_prefix(input: &str) -> String {
+    println!("{}", input);
     input
         .chars()
         .take_while(|v| v.to_digit(10).is_some())
