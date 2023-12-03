@@ -28,21 +28,25 @@ fn find_part_numbers(input: Vec<&str>) -> Vec<u32> {
     let literally_nothing = ".".repeat(WIDTH);
 
     for i in 0..input.len() {
-        let line_factory = |i: usize| {
-            input
-                .get(i)
-                .map(|v| v.chars())
-                .unwrap_or(literally_nothing.chars())
-                .map(is_symbol)
-                .collect::<Vec<_>>()
+        let line_factory = |offset: i64| {
+            let i = i as i64 - offset;
+            // what the actual fuck am i doing with my life
+            if i >= 0 {
+                input[i as usize]
+            } else {
+                &literally_nothing
+            }
+            .chars()
+            .map(is_symbol)
+            .collect::<Vec<_>>()
         };
 
         // stream of booleans to be processed along the line
         // to see which chars are "adjacent" to symbols
         let tape: Vec<bool> = {
-            let previous = line_factory(i - 1);
-            let current = line_factory(i);
-            let next = line_factory(i + 1);
+            let previous = line_factory(-1);
+            let current = line_factory(0);
+            let next = line_factory(1);
 
             previous
                 .iter()
