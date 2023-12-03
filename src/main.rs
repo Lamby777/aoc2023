@@ -9,25 +9,33 @@ mod macros;
 
 const WIDTH: usize = 140;
 
-// as it turns out, using a Vec<Vec<char>> is actually
-// harder to work with than just Vec<char> in this case
-
 fn is_symbol(ch: char) -> bool {
     ch.is_digit(10) && ch != '.'
 }
 
-fn symbol_indices(line: &[char]) -> Vec<usize> {
-    line.iter()
-        .enumerate()
-        .filter_map(|(i, &ch)| if is_symbol(ch) { Some(i) } else { None })
-        .collect()
-}
-
-fn find_part_numbers(input: Vec<char>) -> Vec<u32> {
+fn find_part_numbers(input: Vec<&str>) -> Vec<u32> {
     let res = vec![];
 
-    for (i, &v) in input.iter().enumerate() {
-        //
+    // empty line iter used to make start/end follow
+    // the same rules as the rest of the lines
+    let literally_nothing = ".".repeat(WIDTH);
+
+    for i in 0..input.len() {
+        let current = input[i];
+
+        let line_iter = |i: usize| {
+            input
+                .get(i)
+                .map(|v| v.chars())
+                .unwrap_or(literally_nothing.chars())
+        };
+
+        let previous = line_iter(i - 1);
+        let next = line_iter(i + 1);
+
+        for ch in current.chars() {
+            //
+        }
     }
 
     res
@@ -36,9 +44,7 @@ fn find_part_numbers(input: Vec<char>) -> Vec<u32> {
 fn main() {
     let input = inputfile!("3.txt");
 
-    // split into a Vec<Vec<char>>
-    let lines = input.lines().flat_map(str::chars).collect();
-
+    let lines = input.lines().collect();
     let sum = find_part_numbers(lines).iter().sum::<u32>();
     println!("{}", sum);
 }
