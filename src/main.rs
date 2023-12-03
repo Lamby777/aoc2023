@@ -7,7 +7,11 @@
 
 mod macros;
 
-const NUMBERS: [i32; 10] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+const NUMBERS: [char; 10] = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+fn find_part_numbers(input: Vec<Option<&str>>) -> Vec<u32> {
+    todo!()
+}
 
 fn main() {
     let input = inputfile!("3.txt");
@@ -17,7 +21,8 @@ fn main() {
         .chain(std::iter::once(None))
         .collect();
 
-    // println!("{}", sum);
+    let sum = find_part_numbers(lines).iter().sum::<u32>();
+    println!("{}", sum);
 }
 
 #[cfg(test)]
