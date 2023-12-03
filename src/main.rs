@@ -44,15 +44,15 @@ fn find_part_numbers(input: Vec<&str>) -> Vec<u32> {
         // stream of booleans to be processed along the line
         // to see which chars are "adjacent" to symbols
         let tape: Vec<bool> = {
-            let previous = line_factory(-1);
-            let current = line_factory(0);
-            let next = line_factory(1);
+            // we pwayin siwwy hewe :3
+            let lines = (-1..=1).map(line_factory).collect::<Vec<_>>();
 
-            previous
+            // goofy ahh code
+            lines[0]
                 .iter()
-                .zip(current)
-                .zip(next)
-                .map(|((&a, b), c)| a || b || c)
+                .zip(lines[1].iter())
+                .zip(lines[2].iter())
+                .map(|((&a, &b), &c)| a || b || c)
                 .collect()
         };
 
