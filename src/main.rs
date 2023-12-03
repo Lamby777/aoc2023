@@ -28,8 +28,6 @@ fn find_part_numbers(input: Vec<&str>) -> Vec<u32> {
     let literally_nothing = ".".repeat(WIDTH);
 
     for i in 0..input.len() {
-        let line = input[i];
-
         let line_factory = |i: usize| {
             input
                 .get(i)
@@ -39,14 +37,27 @@ fn find_part_numbers(input: Vec<&str>) -> Vec<u32> {
                 .collect::<Vec<_>>()
         };
 
-        let previous = line_factory(i - 1);
-        let next = line_factory(i + 1);
+        // stream of booleans to be processed along the line
+        // to see which chars are "adjacent" to symbols
+        let tape: Vec<bool> = {
+            let previous = line_factory(i - 1);
+            let current = line_factory(i);
+            let next = line_factory(i + 1);
+
+            previous
+                .iter()
+                .zip(current)
+                .zip(next)
+                .map(|((&a, b), c)| a || b || c)
+                .collect()
+        };
 
         // the last remembered index of where a
         // number started
         let mut is_part = false;
         let mut num_index = 0;
 
+        let line = input[i];
         let line_chars = line.chars().chain(std::iter::once('.'));
         for (i, ch) in line_chars.enumerate() {
             if !ch.is_digit(10) && is_part {
