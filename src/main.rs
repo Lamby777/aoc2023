@@ -56,6 +56,7 @@ fn find_part_numbers(input: Vec<&str>) -> Vec<u32> {
         // number started
         let mut is_part = false;
         let mut num_index = 0;
+        let mut last_ch = ' ';
 
         let line = input[i];
         let line_chars = line.chars().chain(std::iter::once('.'));
@@ -70,8 +71,13 @@ fn find_part_numbers(input: Vec<&str>) -> Vec<u32> {
             match ch {
                 '.' => is_part = false,
                 _ if is_symbol(ch) => is_part = true,
-                _ => num_index = i,
+
+                // start of new number
+                _ if !last_ch.is_digit(10) => num_index = i,
+                _ => (),
             }
+
+            last_ch = ch;
         }
     }
 
