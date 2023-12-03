@@ -7,18 +7,27 @@
 
 mod macros;
 
-const NUMBERS: [char; 10] = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+// could be one vec since the width is the same for all lines
+// ... but who gives a shit, we're playing for fun, not milliseconds :)
+type Grid<T> = Vec<Vec<T>>;
 
-fn find_part_numbers(input: Vec<Option<&str>>) -> Vec<u32> {
-    todo!()
+fn find_part_numbers(input: Grid<char>) -> Vec<u32> {
+    let res = vec![];
+
+    for (i, v) in input.iter().enumerate() {
+        //
+    }
+
+    res
 }
 
 fn main() {
     let input = inputfile!("3.txt");
 
-    let lines: Vec<_> = std::iter::once(None)
-        .chain(input.lines().map(Some))
-        .chain(std::iter::once(None))
+    // split into a Vec<Vec<char>>
+    let lines = input
+        .lines()
+        .map(|v| v.chars().collect::<Vec<_>>())
         .collect();
 
     let sum = find_part_numbers(lines).iter().sum::<u32>();
