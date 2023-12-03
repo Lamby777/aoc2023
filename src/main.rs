@@ -7,11 +7,12 @@
 
 mod macros;
 
-// could be one vec since the width is the same for all lines
-// ... but who gives a shit, we're playing for fun, not milliseconds :)
-type Grid<T> = Vec<Vec<T>>;
+const WIDTH: usize = 140;
 
-fn find_part_numbers(input: Grid<char>) -> Vec<u32> {
+// as it turns out, using a Vec<Vec<char>> is actually
+// harder to work with than just Vec<char> in this case
+
+fn find_part_numbers(input: Vec<char>) -> Vec<u32> {
     let res = vec![];
 
     for (i, v) in input.iter().enumerate() {
@@ -25,10 +26,7 @@ fn main() {
     let input = inputfile!("3.txt");
 
     // split into a Vec<Vec<char>>
-    let lines = input
-        .lines()
-        .map(|v| v.chars().collect::<Vec<_>>())
-        .collect();
+    let lines = input.lines().flat_map(str::chars).collect();
 
     let sum = find_part_numbers(lines).iter().sum::<u32>();
     println!("{}", sum);
