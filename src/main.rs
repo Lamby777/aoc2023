@@ -47,7 +47,8 @@ fn find_part_numbers(input: Vec<&str>) -> Vec<u32> {
         let mut is_part = false;
         let mut num_index = 0;
 
-        for ch in line.chars().chain(std::iter::once('.')) {
+        let line_chars = line.chars().chain(std::iter::once('.'));
+        for (i, ch) in line_chars.enumerate() {
             if !ch.is_digit(10) && is_part {
                 // parse the number
                 let num = num_prefix(&line[num_index..]);
@@ -55,20 +56,12 @@ fn find_part_numbers(input: Vec<&str>) -> Vec<u32> {
                 part_numbers.push(num);
             }
 
-            if is_symbol(ch) {
-                is_part = true;
-                continue;
+            match ch {
+                '.' => is_part = false,
+                _ if is_symbol(ch) => is_part = true,
+                _ => num_index = i,
             }
-
-            if ch == '.' {
-                is_part = false;
-                continue;
-            }
-
-            //
         }
-
-        is_part = false;
     }
 
     part_numbers
