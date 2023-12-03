@@ -1,132 +1,29 @@
 //!
-//! Day 2
-//! Part 2
+//! Day 3
+//! Part 1
 //!
 //!  - &Cherry
 //!
 
 mod macros;
 
-#[derive(Debug, PartialEq)]
-struct Game {
-    id: u32,
-
-    picks: Vec<RGB>,
-}
-
-impl Game {
-    pub fn from_line(line: &str) -> Self {
-        let mut words = line.split_whitespace();
-
-        // skip "Game"
-        words.next();
-
-        let id = {
-            // skip the colon
-            let mut it = words.next().unwrap().chars();
-            it.next_back();
-
-            it.as_str().parse::<u32>().unwrap()
-        };
-
-        // this has the side effect of removing all
-        // the whitespace, which is good for us here.
-        let counts = words.collect::<String>();
-        let counts = counts.split(';');
-
-        let picks = counts.fold(vec![], |mut res, count| {
-            res.push(RGB::from_count(count));
-            res
-        });
-
-        Self { id, picks }
-    }
-
-    pub fn required_counts(&self) -> RGB {
-        let mut iter = self.picks.iter();
-
-        let mut max = iter.next().unwrap().clone();
-        for RGB(r, g, b) in iter {
-            if *r > max.0 {
-                max.0 = *r;
-            }
-
-            if *g > max.1 {
-                max.1 = *g
-            }
-
-            if *b > max.2 {
-                max.2 = *b
-            }
-        }
-
-        max
-    }
-}
-
-#[derive(Clone, Debug, PartialEq)]
-struct RGB(u32, u32, u32);
-
-impl RGB {
-    pub fn from_count(count: &str) -> Self {
-        let mut iter = count.split(',');
-        let mut res = Self(0, 0, 0);
-
-        while let Some(count) = iter.next() {
-            let mut chars = count.chars();
-
-            let cube_count = chars
-                .by_ref()
-                .take_while(|v| v.to_digit(10).is_some())
-                .collect::<String>();
-            let cube_count = cube_count.parse::<u32>().unwrap();
-
-            let color = chars.collect::<String>();
-            let color_ref = match color.as_str() {
-                // think dumber, not harder :3
-                "ed" => &mut res.0,
-                "reen" => &mut res.1,
-                "lue" => &mut res.2,
-                x @ _ => panic!("wtf is a {}", x),
-            };
-
-            *color_ref = cube_count;
-        }
-
-        res
-    }
-
-    pub fn power(&self) -> u32 {
-        self.0 * self.1 * self.2
-    }
-}
+const NUMBERS: [i32; 10] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 fn main() {
-    let input = inputfile!("2.txt");
+    let input = inputfile!("3.txt");
 
-    let sum = input
-        .lines()
-        .map(|line| Game::from_line(line).required_counts().power())
-        .sum::<u32>();
+    let lines: Vec<_> = std::iter::once(None)
+        .chain(input.lines().map(Some))
+        .chain(std::iter::once(None))
+        .collect();
 
-    println!("{}", sum);
+    // println!("{}", sum);
 }
 
 #[cfg(test)]
 mod tests {
+    #[allow(unused_imports)]
     use super::*;
 
-    #[test]
-    fn parse_line_works() {
-        let line = "Game 1: 4 blue; 1 green, 2 red; 4 blue, 1 green, 6 red";
-        let game = Game::from_line(line);
-
-        assert_eq!(
-            game,
-            Game {
-                id: 1,
-                picks: vec![RGB(0, 0, 4), RGB(2, 1, 0), RGB(6, 1, 4)],
-            }
-        )
-    }
+    //
 }
