@@ -36,7 +36,6 @@ def vertical_symbol_scan(line: int, col: int):
 
 
 partnums = []
-num_indices = []
 
 for lineno, line in enumerate(lines):
     is_part = False
@@ -51,7 +50,12 @@ for lineno, line in enumerate(lines):
     num_indices.reverse()
 
     for start in num_indices:
-        pass
+        numlen = 0
+
+        while line[start + numlen].isdigit():
+            numlen += 1
+
+        print(f"numlen: {numlen}")
 
     break
 
@@ -60,5 +64,3 @@ print(partnums)
 
 # 546184 is "too high" :(
 print(sum(partnums))
-
-print(num_indices)
