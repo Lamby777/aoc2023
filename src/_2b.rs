@@ -102,7 +102,7 @@ impl RGB {
 }
 
 fn main() {
-    let input = inputfile!("2.txt");
+    let input = include_str!("inputs/2.txt");
 
     let sum = input
         .lines()

@@ -85,7 +85,7 @@ impl RGB {
 }
 
 fn main() {
-    let input = inputfile!("2.txt");
+    let input = include_str!("inputs/2.txt");
     let limits = RGB(12, 13, 14);
 
     let sum = input
