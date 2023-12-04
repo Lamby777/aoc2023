@@ -15,26 +15,51 @@ def is_symbol(ch: str | None):
     return ch is not None and (not ch.isdigit()) and (ch != ".")
 
 
-def getch_safe(i: int, j: int):
+def getch_safe(line: int, col: int):
     try:
-        return lines[i][j]
+        return lines[line][col]
     except IndexError:
         return None
 
 
-def is_partnum(i: int):
-    pass
+def vertical_symbol_scan(line: int, col: int):
+    """
+    If the character is a symbol OR if
+    there's a symbol above/below it
+    """
 
+    return any([is_symbol(getch_safe(line + i, col)) for i in [-1, 0, 1]])
+
+
+partnums = []
 
 for lineno, line in enumerate(lines):
     number_so_far = ""
     is_part = False
 
     for i, ch in enumerate(line):
-        print(i, ch)
         if ch.isdigit():
-            pass
+            number_so_far += ch
         else:
-            pass
+            if vertical_symbol_scan(lineno, i):
+                is_part = True
+            else:
+                is_part = False
 
-    exit()
+            if not number_so_far:
+                continue
+
+            # if the char after the number is a symbol,
+            # then the number is still a part number
+            is_part = is_part or ch != "."
+
+            if is_part and number_so_far:
+                partnums.append(int(number_so_far))
+
+            number_so_far = ""
+
+    # for testing
+    break
+
+# should be 180, 218, 189, 507
+print(partnums)
