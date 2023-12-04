@@ -23,7 +23,7 @@ def getch_safe(line: int, col: int):
     try:
         return lines[line][col]
     except IndexError:
-        return None
+        return ""
 
 
 def vertical_symbol_scan(line: int, col: int):
@@ -46,30 +46,27 @@ for lineno, line in enumerate(lines):
 
     for i, ch in enumerate(line):
         vert_scan = vertical_symbol_scan(lineno, i)
-        is_part = is_part or vert_scan
 
+        # if next or previous char are numbers, check
+        # this column for symbols
+        print(getch_safe(lineno, i - 1))
+        if getch_safe(lineno, i - 1).isdigit() or getch_safe(lineno, i + 1).isdigit():
+            print("vert_scan", vert_scan)
+            is_part = True
+
+        # if this line is a symbol and we parsed a number
+        # and that number has been detected to be a part
+        # number, push it to the list
         if ch.isdigit():
             number_so_far += ch
-        else:
-            # number ended, do something with it
-
-            if not number_so_far:
-                # last ch was also not a number,
-                # so we disregard its symbol-ness
-                is_part = vert_scan
-
-                # don't push empty strings
-                continue
-
-            # if the char after the number is a symbol,
-            # then the number is still a part number
-            if is_part or is_symbol(ch):
-                partnums.append(int(number_so_far))
-
+        if is_symbol(ch) and number_so_far and is_part:
+            partnums.append(int(number_so_far))
             number_so_far = ""
 
-        # TODO handle newlines
-    # break
+            if not is_symbol(ch):
+                is_part = False
+
+    break
 
 #
 print(partnums)
