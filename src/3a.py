@@ -42,7 +42,6 @@ for lineno, line in enumerate(lines):
         is_part = is_part or vert_scan
 
         if ch.isdigit():
-            print(f"{is_part=}")
             number_so_far += ch
         else:
             # number ended, do something with it
@@ -61,13 +60,8 @@ for lineno, line in enumerate(lines):
 
             if is_part and number_so_far:
                 partnums.append(int(number_so_far))
-            else:
-                print(f"not a part number: {number_so_far}")
 
             number_so_far = ""
 
-    # for testing
-    break
-
-# should be 180, 218, 189, 507
-print(partnums)
+# 546184 is "too high" :(
+print(sum(partnums))
