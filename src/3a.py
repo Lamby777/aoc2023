@@ -36,35 +36,22 @@ def vertical_symbol_scan(line: int, col: int):
 
 
 partnums = []
+num_indices = []
 
 for lineno, line in enumerate(lines):
-    number_so_far = ""
     is_part = False
 
     # lineno = 1
     # line = lines[1]
 
-    for i, ch in enumerate(line):
-        vert_scan = vertical_symbol_scan(lineno, i)
+    num_indices = [i for i, ch in enumerate(line) if ch.isdigit()]
+    num_indices.reverse()
 
-        # if next or previous char are numbers, check
-        # this column for symbols
-        print(getch_safe(lineno, i - 1))
-        if getch_safe(lineno, i - 1).isdigit() or getch_safe(lineno, i + 1).isdigit():
-            print("vert_scan", vert_scan)
-            is_part = True
+    num_indices = [i for i in num_indices if i - 1 not in num_indices]
+    num_indices.reverse()
 
-        # if this line is a symbol and we parsed a number
-        # and that number has been detected to be a part
-        # number, push it to the list
-        if ch.isdigit():
-            number_so_far += ch
-        if is_symbol(ch) and number_so_far and is_part:
-            partnums.append(int(number_so_far))
-            number_so_far = ""
-
-            if not is_symbol(ch):
-                is_part = False
+    for start in num_indices:
+        pass
 
     break
 
@@ -73,3 +60,5 @@ print(partnums)
 
 # 546184 is "too high" :(
 print(sum(partnums))
+
+print(num_indices)
