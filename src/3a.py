@@ -56,12 +56,11 @@ for lineno, line in enumerate(lines):
 
             # if the char after the number is a symbol,
             # then the number is still a part number
-            is_part = is_part or ch != "."
-
-            if is_part and number_so_far:
+            if is_part or ch != ".":
                 partnums.append(int(number_so_far))
 
             number_so_far = ""
+
 
 # 546184 is "too high" :(
 print(sum(partnums))
