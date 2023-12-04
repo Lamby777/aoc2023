@@ -38,15 +38,21 @@ for lineno, line in enumerate(lines):
     is_part = False
 
     for i, ch in enumerate(line):
+        vert_scan = vertical_symbol_scan(lineno, i)
+        is_part = is_part or vert_scan
+
         if ch.isdigit():
+            print(f"{is_part=}")
             number_so_far += ch
         else:
-            if vertical_symbol_scan(lineno, i):
-                is_part = True
-            else:
-                is_part = False
+            # number ended, do something with it
 
             if not number_so_far:
+                # last ch was also not a number,
+                # so we disregard its symbol-ness
+                is_part = vert_scan
+
+                # don't push empty strings
                 continue
 
             # if the char after the number is a symbol,
@@ -55,6 +61,8 @@ for lineno, line in enumerate(lines):
 
             if is_part and number_so_far:
                 partnums.append(int(number_so_far))
+            else:
+                print(f"not a part number: {number_so_far}")
 
             number_so_far = ""
 
