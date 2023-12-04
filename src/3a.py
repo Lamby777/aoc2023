@@ -24,18 +24,10 @@ with open("inputs/3.txt") as f:
     _chars = (first_line + f.read()).replace("\n", "")
     chars = safelist(_chars)
 
-# could probably be a loop but i'm lazy rn :P
-OFFSETS = [
-    -LINE_LEN - 1,
-    -LINE_LEN,
-    -LINE_LEN + 1,
-    -1,
-    # we don't count 0
-    1,
-    LINE_LEN - 1,
-    LINE_LEN,
-    LINE_LEN + 1,
-]
+OFFSETS = [(LINE_LEN * y) - x for x in range(-1, 2) for y in range(-1, 2)]
+OFFSETS = [n for n in OFFSETS if n != 0]
+OFFSETS.sort()
+print(OFFSETS)
 
 
 def is_symbol(ch: str | None):
