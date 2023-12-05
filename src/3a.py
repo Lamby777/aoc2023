@@ -15,8 +15,8 @@ def is_blank(ch: str):
     return ch not in [".", "\n"]
 
 
-def is_symbol(ch: str | None):
-    return ch is not None and (not ch.isdigit()) and not is_blank(ch)
+def is_symbol(ch: str):
+    return (not ch.isdigit()) and not is_blank(ch)
 
 
 def getch_safe(line: int, col: int):
@@ -26,23 +26,33 @@ def getch_safe(line: int, col: int):
         return ""
 
 
-def vertical_symbol_scan(line: int, col: int):
-    """
-    If the character is a symbol OR if
-    there's a symbol above/below it
-    """
+def try_get(lst: list, i: int):
+    try:
+        return lst[i]
+    except IndexError:
+        pass
 
-    return any([is_symbol(getch_safe(line + i, col)) for i in [-1, 0, 1]])
+
+def try_slice_around(line: int, col: int, length: int):
+    """
+    return a flattened list of all the characters
+    "surrounding" a slice
+    """
+    to_slice = [
+        try_get(lines, line - 1),
+        lines[line],
+        try_get(lines, line + 1),
+    ]
+
+    slice_start = col if col == 0 else col - 1
+
+    sliced = [line[slice_start : col + length] for line in to_slice]
+    return "".join(sliced)
 
 
 partnums = []
 
 for lineno, line in enumerate(lines):
-    is_part = False
-
-    # lineno = 1
-    # line = lines[1]
-
     num_indices = [i for i, ch in enumerate(line) if ch.isdigit()]
     num_indices.reverse()
 
@@ -52,10 +62,18 @@ for lineno, line in enumerate(lines):
     for start in num_indices:
         numlen = 0
 
-        while line[start + numlen].isdigit():
+        # find length of number
+        while getch_safe(lineno, start + numlen).isdigit():
             numlen += 1
 
-        print(f"numlen: {numlen}")
+        # see if number is a part number
+        sliced = try_slice_around(lineno, start, numlen)
+        print(sliced)
+        is_part = any([is_symbol(ch) for ch in sliced])
+
+        if is_part:
+            partnum = int(line[start : start + numlen])
+            partnums.append(partnum)
 
     break
 
