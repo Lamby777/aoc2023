@@ -39,9 +39,13 @@ def try_slice_around(line: int, col: int, length: int):
     "surrounding" a slice
     """
     to_slice = [
-        try_get(lines, line - 1),
-        lines[line],
-        try_get(lines, line + 1),
+        x
+        for x in [
+            try_get(lines, line - 1),
+            lines[line],
+            try_get(lines, line + 1),
+        ]
+        if x is not None
     ]
 
     slice_start = col if col == 0 else col - 1
@@ -68,18 +72,11 @@ for lineno, line in enumerate(lines):
 
         # see if number is a part number
         sliced = try_slice_around(lineno, start, numlen)
-        print(sliced)
         is_part = any([is_symbol(ch) for ch in sliced])
-        print(f"{is_part=}")
 
         if is_part:
             partnum = int(line[start : start + numlen])
             partnums.append(partnum)
-
-    break
-
-#
-print(partnums)
 
 # 546184 is "too high" :(
 print(sum(partnums))
