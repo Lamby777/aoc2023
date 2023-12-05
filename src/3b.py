@@ -12,6 +12,8 @@ with open("inputs/3.txt") as f:
 
 GEAR = "*"
 
+print("\n\n\n")
+
 
 def is_blank(ch: str):
     return ch in [".", "\n"]
@@ -86,19 +88,17 @@ for lineno, line in enumerate(lines):
 def get_gear_ratio(line: int, col: int):
     acceptable_lines = range(line - 1, line + 2)
 
-    try:
+    def is_gearnum(partdata: list):
+        return partdata[1] in acceptable_lines and col in partdata[2]
 
-        def is_gearnum(partdata: list):
-            return partdata[1] in acceptable_lines and col in partdata[2]
+    gearnums = list(filter(is_gearnum, partnums))
 
-        gearnums = filter(is_gearnum, partnums)
-
-        n1, n2 = next(gearnums)[0], next(gearnums)[0]
-        print(n1, n2)
-        return n1 * n2
-
-    except (IndexError, StopIteration):
+    if len(gearnums) != 2:
         return
+
+    n1, n2 = gearnums[0][0], gearnums[1][0]
+    print(n1, n2)
+    return n1 * n2
 
 
 ratios = []
@@ -118,4 +118,5 @@ assert 166140 in ratios
 # "39263106" is too low
 # "43617617" is too low
 # "82785737" is not correct (???)
+# "77059864" is not correct (???)
 print(sum(ratios))
