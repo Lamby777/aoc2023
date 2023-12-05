@@ -79,7 +79,7 @@ for lineno, line in enumerate(lines):
 
         if is_part:
             partnum = int(line[start : start + numlen])
-            partdata = [partnum, lineno, range(start, start + numlen)]
+            partdata = [partnum, lineno, range(start - 1, start + numlen + 2)]
             partnums.append(partdata)
 
 
@@ -92,7 +92,10 @@ def get_gear_ratio(line: int, col: int):
             return partdata[1] in acceptable_lines and col in partdata[2]
 
         gearnums = filter(is_gearnum, partnums)
-        return next(gearnums)[0] * next(gearnums)[0]
+
+        n1, n2 = next(gearnums)[0], next(gearnums)[0]
+        print(n1, n2)
+        return n1 * n2
 
     except (IndexError, StopIteration):
         return
@@ -108,5 +111,11 @@ for lineno, line in enumerate(lines):
 ratios = [[x for x in r if x is not None] for r in ratios if r]
 ratios = [x for r in ratios for x in r]
 
+print(ratios)
+assert 166140 in ratios
+
 # "20131086" is too low
+# "39263106" is too low
+# "43617617" is too low
+# "82785737" is not correct (???)
 print(sum(ratios))
