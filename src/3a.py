@@ -12,7 +12,7 @@ with open("inputs/3.txt") as f:
 
 
 def is_blank(ch: str):
-    return ch not in [".", "\n"]
+    return ch in [".", "\n"]
 
 
 def is_symbol(ch: str):
@@ -46,7 +46,7 @@ def try_slice_around(line: int, col: int, length: int):
 
     slice_start = col if col == 0 else col - 1
 
-    sliced = [line[slice_start : col + length] for line in to_slice]
+    sliced = [line[slice_start : col + length + 1] for line in to_slice]
     return "".join(sliced)
 
 
@@ -70,6 +70,7 @@ for lineno, line in enumerate(lines):
         sliced = try_slice_around(lineno, start, numlen)
         print(sliced)
         is_part = any([is_symbol(ch) for ch in sliced])
+        print(f"{is_part=}")
 
         if is_part:
             partnum = int(line[start : start + numlen])
