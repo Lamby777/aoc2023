@@ -10,6 +10,8 @@
 with open("inputs/3.txt") as f:
     lines = f.readlines()
 
+GEAR = "*"
+
 
 def is_blank(ch: str):
     return ch in [".", "\n"]
@@ -56,6 +58,7 @@ def try_slice_around(line: int, col: int, length: int):
 
 partnums = []
 
+# find part numbers
 for lineno, line in enumerate(lines):
     num_indices = [i for i, ch in enumerate(line) if ch.isdigit()]
     num_indices.reverse()
@@ -76,6 +79,34 @@ for lineno, line in enumerate(lines):
 
         if is_part:
             partnum = int(line[start : start + numlen])
-            partnums.append(partnum)
+            partdata = [partnum, lineno, range(start, start + numlen)]
+            partnums.append(partdata)
 
-print(sum(partnums))
+
+def get_gear_ratio(line: int, col: int):
+    acceptable_lines = range(line - 1, line + 2)
+
+    try:
+
+        def is_gearnum(partdata: list):
+            return partdata[1] in acceptable_lines and col in partdata[2]
+
+        gearnums = filter(is_gearnum, partnums)
+        return next(gearnums)[0] * next(gearnums)[0]
+
+    except (IndexError, StopIteration):
+        return
+
+
+ratios = []
+
+for lineno, line in enumerate(lines):
+    ratios.append(
+        [get_gear_ratio(lineno, i) for i, ch in enumerate(line) if ch == GEAR]
+    )
+
+ratios = [[x for x in r if x is not None] for r in ratios if r]
+ratios = [x for r in ratios for x in r]
+
+# "20131086" is too low
+print(sum(ratios))
